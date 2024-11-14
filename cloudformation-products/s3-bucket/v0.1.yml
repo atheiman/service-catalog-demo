@@ -1,0 +1,16 @@
+Metadata:
+  ServiceCatalog:
+    ProductVersion:
+      Description: Initial release
+      Guidance: DEPRECATED
+
+Resources:
+  Bucket:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Retain
+    Properties:
+      Tags:
+        - Key: MyTagKey
+          Value: my-tag-value
+        - Key: AnotherTagKey
+          Value: my-tag-value
