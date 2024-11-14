@@ -1,0 +1,31 @@
+Metadata:
+  ServiceCatalog:
+    ProductVersion:
+      Description: Add 'BucketName' parameter
+
+Parameters:
+  BucketName:
+    Type: String
+    Default: ""
+
+Conditions:
+  BucketNameProvided:
+    Fn::Not:
+      - Fn::Equals:
+          - Ref: BucketName
+          - ""
+
+Resources:
+  Bucket:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+    Properties:
+      BucketName:
+        Fn::If:
+          - BucketNameProvided
+          - Ref: BucketName
+          - Ref: AWS::NoValue
+      Tags:
+        - Key: CfnTemplateTagKey
+          Value: CfnTemplateTagValue
