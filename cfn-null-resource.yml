@@ -1,0 +1,11 @@
+# When deploying aws_servicecatalog_product terraform resource, an initial product version
+# is required. This template is used for all products. It produces no resources.
+
+Conditions:
+  Never:
+    Fn::Equals: [a, b]
+
+Resources:
+  NullResource:
+    Type: Custom::Null
+    Condition: Never
