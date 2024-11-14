@@ -1,0 +1,49 @@
+Metadata:
+  ServiceCatalog:
+    ProductVersion:
+      Description: Initial product release
+
+Parameters:
+  NameTag:
+    Type: String
+    Default: ""
+    Description: Will default to CloudFormation stack name if omitted.
+  AmiId:
+    Type: String
+    Default: "ami-0e46a6a8d36d6f1f2" # us-gov-west-1 AmznLnx2023
+    Description: Specify an AMI id available in the current region.
+  InstanceType:
+    Type: String
+    Default: t3.medium
+    AllowedValues:
+      - t3.medium
+      - t3.large
+      - t3.xlarge
+      - c6i.large
+      - c6i.xlarge
+      - m6i.large
+      - m6i.xlarge
+      - r6i.large
+      - r6i.xlarge
+
+Conditions:
+  NameTagProvided:
+    Fn::Not:
+      - Fn::Equals:
+          - Ref: NameTag
+          - ""
+
+Resources:
+  Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: { Ref: AmiId }
+      InstanceType: { Ref: InstanceType }
+      Tags:
+        - Key: Name
+          Value:
+            Fn::If:
+              - NameTagProvided
+              - Ref: NameTag
+              - Ref: AWS::StackName
+      PropagateTagsToVolumeOnCreation: True
