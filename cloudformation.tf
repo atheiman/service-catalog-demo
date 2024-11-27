@@ -9,14 +9,7 @@ locals {
     ServiceCatalogActionsSsmRoleName = "ServiceCatalogActionsSsmRole"
   }
   cfn_svc_ctlg_template_body = jsonencode({
-    Parameters = {
-      ServiceCatalogUserRolePath       = { Type = "String" }
-      ServiceCatalogUserRoleName       = { Type = "String" }
-      ServiceCatalogLaunchRolePath     = { Type = "String" }
-      ServiceCatalogLaunchRoleName     = { Type = "String" }
-      ServiceCatalogActionsSsmRolePath = { Type = "String" }
-      ServiceCatalogActionsSsmRoleName = { Type = "String" }
-    }
+    Parameters = { for k, v in local.cfn_svc_ctlg_parameters : k => { Type = "String" } }
     Resources = merge(
       {
         # Note - Permission requirements are different for Amazon-owned SSM documents and customer-owned SSM documents.
@@ -127,6 +120,15 @@ locals {
                     }
                   }
                 },
+                {
+                  Effect = "Allow"
+                  Principal = {
+                    # Launch role needs to be assumed by terraform provisioning engine CodeBuild
+                    # and ParameterParser Lambda roles
+                    AWS = local.acct_id
+                  }
+                  Action = "sts:AssumeRole"
+                },
               ]
             }
             ManagedPolicyArns = [
@@ -139,26 +141,34 @@ locals {
                   Version = "2012-10-17"
                   Statement = [
                     {
-                      Sid      = "LoadServiceCatalogProductTemplates"
-                      Effect   = "Allow"
-                      Action   = "s3:GetObject"
-                      Resource = "*"
-                      Condition = {
-                        StringEquals = {
-                          "s3:ExistingObjectTag/servicecatalog:provisioning" = "true"
-                        }
-                      }
-                    },
-                    {
                       Sid    = "ProvisionServiceCatalogProducts"
                       Effect = "Allow"
                       Action = [
+                        "s3:Get*",
                         "s3:*Bucket*",
                         "s3:*Tag*",
                         "ec2:Describe*",
                         "ec2:RunInstances",
                         "ec2:TerminateInstances",
                         "ec2:*Tags",
+                      ]
+                      Resource = "*"
+                    },
+                    # External provisioning engine resource group and tag management
+                    # https://docs.aws.amazon.com/servicecatalog/latest/adminguide/getstarted-launchrole-Terraform.html
+                    {
+                      Sid    = "ServiceCatalogTerraformResourceGroupsAndTags"
+                      Effect = "Allow"
+                      Action = [
+                        "resource-groups:CreateGroup",
+                        "resource-groups:ListGroupResources",
+                        "resource-groups:DeleteGroup",
+                        "resource-groups:Tag",
+                        "tag:GetResources",
+                        "tag:GetTagKeys",
+                        "tag:GetTagValues",
+                        "tag:TagResources",
+                        "tag:UntagResources",
                       ]
                       Resource = "*"
                     },
