@@ -25,7 +25,6 @@ provider "aws" {
 resource "aws_s3_bucket" "bucket" {
   bucket_prefix = var.bucket_name_prefix
   force_destroy = var.force_destroy
-  # force_destroy = tobool(lower(tostring(var.force_destroy)))
 }
 
 output "bucket_name" {
