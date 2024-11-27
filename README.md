@@ -58,3 +58,4 @@ Update and Terminate operations follow a nearly identical workflow, each with th
 
 ### TODO
 - Dead -letter SQS queue `ServiceCatalogExternal-DeadLetter` message handling - call `NotifyProvisionProductEngineWorkflowResult` API with basic failure message. This would remove `try` / `catch` logic in `start_product_operation.py`
+- Include `ResourceIdentifier` in the success `NotifyProvisionProductEngineWorkflowResult` API call - it seems this will [enable Service Catalog to aggregate resources from a provisioned product into a resource group and maybe apply additional tags to the resources](https://docs.aws.amazon.com/servicecatalog/latest/adminguide/external-engine.html#external-engine-tagging)
