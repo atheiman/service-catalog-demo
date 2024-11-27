@@ -21,3 +21,14 @@ Components of this demo:
 - service actions using Amazon-owned and customer-owned SSM automation documents ("runbooks")
 - Terraform logic to automatically deploy new products and product versions by simply adding files to [`cloudformation-products/`](./cloudformation-products)
 - product launch constraints
+- Terraform external provisioning engine and example products (described below)
+
+## Terraform External Provisioning
+
+[`modules/tf-svc-ctlg-engine`](modules/tf-svc-ctlg-engine) contains a Service Catalog external engine for Terraform product provisioning. The engine architecture is based off of [github.com/aws-ia/terraform-aws-sce-tf-community](https://github.com/aws-ia/terraform-aws-sce-tf-community). External engines must conform to the API interface documented in [External Engines for AWS Service Catalog](https://docs.aws.amazon.com/servicecatalog/latest/adminguide/external-engine.html). Only one external engine may be deployed per region per account, so if you already have resources for an external engine deployed this module will fail. Below is a summary of the external engine workflow:
+
+1. External products are published to end users. Terraform products are published to S3 as `.zip` packages. They must contain `variables.tf.json` to define all variables the user should input during provisioning. `variables.tf.json` uses the [Terraform JSON configuration syntax](https://developer.hashicorp.com/terraform/language/syntax/json).
+1. Service Catalog stores the published product artifact again in an AWS-managed bucket outside of the portfolio account.
+1. When a user begins provisioning a product version, Service Catalog invokes [Lambda function `ServiceCatalogExternalParameterParser`](modules/tf-svc-ctlg-engine/lambda/parameter_parser.py) in the portfolio account with the location of the artifact in S3 (which must be downloaded using the product launch role). The Lambda function returns input parameters for the user to input in the Service Catalog console.
+1. When the user submits the ProvisionProduct request, Service Catalog publishes a message to [SQS queue `ServiceCatalogExternalProvisionOperationQueue`](modules/tf-svc-ctlg-engine/sqs.tf) in the portfolio account.
+1. [Lambda function `TerraformSvcCtlgEngineStartProductOperation`](modules/tf-svc-ctlg-engine/lambda/start_product_operation.py) in the portfolio account is [invoked by an SQS event source mapping Lambda](https://docs.aws.amazon.com/lambda/latest/dg/with-sqs.html) with the message.
