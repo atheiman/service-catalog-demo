@@ -30,8 +30,7 @@ locals {
 
 data "archive_file" "this" {
   type = "zip"
-  # Save the archive with into path.root and with a unique name so multiple terraform projects and
-  # regions and modules can utilize this module simultaneously
+  # Save the archive with into path.root and with a unique name
   output_path = "${path.root}/tf-product-${var.sc_product.id}-${var.version_name}.zip"
   # Specifying output_file_mode helps produce consistent zip archive contents on linux and windows
   output_file_mode = "0644"
