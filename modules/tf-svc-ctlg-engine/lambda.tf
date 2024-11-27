@@ -75,15 +75,6 @@ data "archive_file" "lambda" {
   type        = "zip"
   source_dir  = "${path.module}/lambda"
   output_path = "${path.module}/lambda.zip"
-
-  # # read content of each file from lambda code dir and ensure consistent line endings across linux and windows
-  # dynamic "source" {
-  #   for_each = fileset("${path.module}/lambda", "**")
-  #   content {
-  #     filename = source.value
-  #     content  = replace(file("${path.module}/lambda/${source.value}"), "\r\n", "\n")
-  #   }
-  # }
 }
 
 resource "aws_cloudwatch_log_group" "lambda" {
