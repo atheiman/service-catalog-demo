@@ -1,3 +1,12 @@
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = ">= 5.0"
+    }
+  }
+}
+
 variable "bucket" {}
 variable "s3_key" { type = string }
 variable "sc_product" {}
@@ -14,7 +23,6 @@ resource "aws_s3_object" "this" {
   bucket = var.bucket.id
   key    = var.s3_key
   source = var.source_file_path
-  etag   = filemd5(var.source_file_path)
 
   lifecycle {
     ignore_changes = [
@@ -23,6 +31,7 @@ resource "aws_s3_object" "this" {
       key,
       source,
       etag,
+      source_hash,
     ]
   }
 }

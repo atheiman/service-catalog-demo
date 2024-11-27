@@ -14,13 +14,13 @@ Parameters:
     Default: ""
     AllowedPattern: '(^$|^arn:aws(-us-gov)?:iam::\d{12}:[\w-]+\/.+$)'
     Description: >-
-      Optional. Grant AWS principals read access to the bucket. Example: arn:aws-us-gov:iam::111111111111:role/RoleOne,arn:aws-us-gov:iam::111111111111:role/RoleTwo
+      Optional. Grant AWS principals read access to the bucket. Example: arn:aws:iam::111111111111:role/RoleOne,arn:aws:iam::111111111111:role/RoleTwo
   WritePrincipalArns:
     Type: CommaDelimitedList
     Default: ""
     AllowedPattern: '(^$|^arn:aws(-us-gov)?:iam::\d{12}:[\w-]+\/.+$)'
     Description: >-
-      Optional. Grant AWS principals write access to the bucket. Example: arn:aws-us-gov:iam::111111111111:role/RoleOne,arn:aws-us-gov:iam::111111111111:role/RoleTwo
+      Optional. Grant AWS principals write access to the bucket. Example: arn:aws:iam::111111111111:role/RoleOne,arn:aws:iam::111111111111:role/RoleTwo
   BucketVersioningStatus:
     Type: String
     AllowedValues: [Enabled, Suspended]

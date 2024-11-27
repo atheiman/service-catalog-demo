@@ -1,3 +1,5 @@
+# https://docs.aws.amazon.com/servicecatalog/latest/adminguide/external-engine.html
+
 terraform {
   required_providers {
     aws = {
@@ -7,12 +9,11 @@ terraform {
   }
 }
 
-provider "aws" {
-  default_tags {
-    tags = {
-      TerraformProjectDir = basename(abspath(path.module))
-    }
-  }
+variable "svc_ctlg_launch_role_path" {
+  type = string
+}
+variable "svc_ctlg_launch_role_name" {
+  type = string
 }
 
 data "aws_partition" "current" {}

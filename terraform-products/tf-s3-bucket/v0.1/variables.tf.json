@@ -1,0 +1,14 @@
+{
+  "variable": {
+    "bucket_name_prefix": {
+      "type": "string",
+      "description": "Name prefix for the bucket",
+      "default": "svc-ctlg-bucket-"
+    },
+    "force_destroy": {
+      "type": "bool",
+      "description": "If true, objects will be deleted from the bucket automatically when terminating the product. If false, all objects must be deleted from the bucket before terminating the product.",
+      "default": true
+    }
+  }
+}

@@ -1,0 +1,3 @@
+ServiceCatalog:
+  ProductVersion:
+    Description: Add bucket policy support, set all variables to string type

@@ -1,0 +1,24 @@
+{
+  "variable": {
+    "bucket_name_prefix": {
+      "type": "string",
+      "description": "Name prefix for the bucket",
+      "default": "svc-ctlg-bucket-"
+    },
+    "force_destroy": {
+      "type": "string",
+      "description": "If true, objects will be deleted from the bucket automatically when terminating the product. If false, all objects must be deleted from the bucket before terminating the product.",
+      "default": "true"
+    },
+    "read_principal_arns_csv": {
+      "type": "string",
+      "description": "Optional. Grant AWS principals read access to the bucket. Example: arn:aws:iam::111111111111:role/RoleOne,arn:aws:iam::111111111111:role/RoleTwo",
+      "default": ""
+    },
+    "write_principal_arns_csv": {
+      "type": "string",
+      "description": "Optional. Grant AWS principals write access to the bucket. Example: arn:aws:iam::111111111111:role/RoleOne,arn:aws:iam::111111111111:role/RoleTwo",
+      "default": ""
+    }
+  }
+}
